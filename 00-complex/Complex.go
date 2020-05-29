@@ -7,7 +7,6 @@ import (
 
 /*
 this is a complex test program.
-
 */
 
 func check(title string, n int, f func(int) int) {
