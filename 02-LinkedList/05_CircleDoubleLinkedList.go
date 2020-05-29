@@ -145,12 +145,5 @@ func (l *CDLL) String() string {
 
 func main() {
 	list := newCDLL()
-	list.add(0)
-	fmt.Println(list.Size, list)
-	list.add(1)
-	fmt.Println(list.Size, list)
-	list.add(2)
-	fmt.Println(list.Size, list)
-	list.add(3)
-	fmt.Println(list.Size, list)
+	fmt.Println(list)
 }
