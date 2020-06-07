@@ -32,7 +32,7 @@ func (s *Stack) Pop() interface{} {
 	return s.data.RemoveIndex(s.Size() - 1)
 }
 
-func (s *Stack) Top() interface{} {
+func (s *Stack) Peek() interface{} {
 	return s.data.IndexOf(s.Size() - 1)
 }
 

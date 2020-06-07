@@ -11,10 +11,10 @@ func main() {
 	s.Push(1)
 	s.Push(2)
 	s.Push(3)
-	s.Push(4)
-	s.Push(5)
 	fmt.Println(s)
-	s.Pop()
+	for s.IsEmpty() == false {
+		fmt.Println(s.Pop())
+	}
+
 	fmt.Println(s)
-	fmt.Println(s.Top())
 }
