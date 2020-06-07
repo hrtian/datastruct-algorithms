@@ -123,10 +123,24 @@ func (l *SLL) String() string {
 }
 
 func main() {
-	list := new(SLL)
-	list.add(0)
-	list.add(1)
-	list.add(2)
-	list.add(3)
-	fmt.Println(list)
+	//_ := &SNode{
+	//	Val: 1,
+	//	Next: &SNode{
+	//		Val: 4,
+	//		Next: &SNode{
+	//			Val: 2,
+	//			Next: &SNode{
+	//				Val: 5,
+	//				Next: &SNode{
+	//					Val: 3,
+	//					Next: &SNode{
+	//						Val:  6,
+	//						Next: nil,
+	//					},
+	//				},
+	//			},
+	//		},
+	//	},
+	//}
+
 }

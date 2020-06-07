@@ -47,12 +47,11 @@ func fibonacci1(n int) int {
 		return n
 	}
 	// 0 1 1 2 3 5
-	first := 0
-	second := 1
-	for i := 0; i < n; i++ {
-		sum := first + second
+	sum, first, second := 0, 0, 1
+	for i := 1; i < n; i++ {
+		sum = first + second
 		first = second
 		second = sum
 	}
-	return first
+	return sum
 }
