@@ -146,11 +146,11 @@ func (l *DLL) String() string {
 //func main() {
 //	list := newDLL()
 //	list.add(0)
-//	fmt.Println(list.Size, list)
+//	fmt.Println(list.size, list)
 //	list.add(1)
-//	fmt.Println(list.Size, list)
+//	fmt.Println(list.size, list)
 //	list.add(2)
-//	fmt.Println(list.Size, list)
+//	fmt.Println(list.size, list)
 //	list.add(3)
-//	fmt.Println(list.Size, list)
+//	fmt.Println(list.size, list)
 //}

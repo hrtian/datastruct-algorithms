@@ -22,59 +22,58 @@ const ElementNotFound int = -1
 * element 元素
  */
 type ArrayList struct {
-	Size     int
-	Elements []interface{}
+	size     int
+	elements []interface{}
 }
 
 // ArrayList construct function
-func NewArrayList(capacity int) *ArrayList {
+func New(capacity int) *ArrayList {
 	if capacity <= DefaultCapacity {
 		capacity = DefaultCapacity
 	}
 
 	return &ArrayList{
-		Size:     0,
-		Elements: make([]interface{}, capacity),
+		elements: make([]interface{}, capacity),
 	}
 
 }
 
-func (a ArrayList) size() int {
-	/*
-	* return size of arraylist
-	* @return
-	 */
-	return a.Size
+/*
+* return size of arraylist
+* @return
+ */
+func (a *ArrayList) Size() int {
+	return a.size
 }
 
-func (a ArrayList) isEmpty() bool {
-	return a.Size == 0
+func (a *ArrayList) IsEmpty() bool {
+	return a.size == 0
 }
 
 // O(1)
-func (a ArrayList) get(index int) interface{} {
-	if index < 0 || index >= a.Size {
-		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.Size))
+func (a *ArrayList) Get(index int) interface{} {
+	if index < 0 || index >= a.size {
+		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.size))
 	}
-	return a.Elements[index]
+	return a.elements[index]
 }
 
 // O(1)
-func (a ArrayList) set(index int, element interface{}) interface{} {
-	if index < 0 || index >= a.Size {
-		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.Size))
+func (a *ArrayList) Set(index int, element interface{}) interface{} {
+	if index < 0 || index >= a.size {
+		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.size))
 	}
 
-	old := a.Elements[index]
-	a.Elements[index] = element
+	old := a.elements[index]
+	a.elements[index] = element
 	return old
 }
 
 // 待完善！！
-func (a ArrayList) indexOf(element interface{}) int {
+func (a *ArrayList) IndexOf(element interface{}) int {
 
-	for i := 0; i < a.Size; i++ {
-		if a.Elements[i] == element {
+	for i := 0; i < a.size; i++ {
+		if a.elements[i] == element {
 			return i
 		}
 	}
@@ -82,113 +81,113 @@ func (a ArrayList) indexOf(element interface{}) int {
 	return ElementNotFound
 }
 
-func (a ArrayList) contains(element interface{}) bool {
-	if a.indexOf(element) != ElementNotFound {
+func (a *ArrayList) Contains(element interface{}) bool {
+	if a.IndexOf(element) != ElementNotFound {
 		return true
 	}
 
 	return false
 }
 
-func (a ArrayList) clear() {
+func (a *ArrayList) Clear() {
 	// clear all member in arraylist
 	// 留下可循环利用的内存，置空不可循环利用的；
-	for i := 0; i < a.Size; i++ {
-		a.Elements[i] = nil
+	for i := 0; i < a.size; i++ {
+		a.elements[i] = nil
 	}
 
-	a.Size = 0
+	a.size = 0
 }
 
 // O(1)  O(n)
-func (a *ArrayList) removeIndex(index int) interface{} {
-	if index < 0 || index >= a.Size {
-		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.Size))
+func (a *ArrayList) RemoveIndex(index int) interface{} {
+	if index < 0 || index >= a.size {
+		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.size))
 	}
 
-	src := a.Elements[index]
-	for i := index + 1; i < a.Size; i++ {
-		a.Elements[i-1] = a.Elements[i]
+	src := a.elements[index]
+	for i := index + 1; i < a.size; i++ {
+		a.elements[i-1] = a.elements[i]
 	}
 
-	a.Elements[a.Size-1] = nil
-	a.Size--
+	a.elements[a.size-1] = nil
+	a.size--
 	a.trim()
 
 	return src
 }
 
 func (a *ArrayList) removeElement(element interface{}) {
-	a.removeIndex(a.indexOf(element))
+	a.RemoveIndex(a.IndexOf(element))
 }
 
 // O(1)  O(n)
 func (a *ArrayList) addIndex(index int, element interface{}) {
-	if index < 0 || index > a.Size { // 判断不一样
-		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.Size))
+	if index < 0 || index > a.size { // 判断不一样
+		panic(fmt.Sprintf("index: %d, size: %d, OutOfRange", index, a.size))
 	}
 
-	a.ensureCapacity(a.Size + 1)
+	a.ensureCapacity(a.size + 1)
 
-	for i := a.Size; i > index; i-- {
-		a.Elements[i] = a.Elements[i-1]
+	for i := a.size; i > index; i-- {
+		a.elements[i] = a.elements[i-1]
 	}
-	a.Elements[index] = element
-	a.Size++
+	a.elements[index] = element
+	a.size++
 }
 
 // O(1) O(n) O(1) 均摊复杂度O(1)
 // 经过连续多次复杂度比较低的情况后，出现个别复杂度搞得情况
-func (a *ArrayList) add(element interface{}) {
-	a.addIndex(a.Size, element)
+func (a *ArrayList) Add(element interface{}) {
+	a.addIndex(a.size, element)
 }
 
 func (a *ArrayList) ensureCapacity(capacity int) {
-	oldCapacity := len(a.Elements)
+	oldCapacity := len(a.elements)
 	if oldCapacity >= capacity {
 		return
 	}
 
 	newCapacity := oldCapacity + oldCapacity>>1
 	newElements := make([]interface{}, newCapacity)
-	fmt.Println("扩容：", a.Size, oldCapacity, newCapacity)
-	for i := 0; i < a.Size; i++ {
-		newElements[i] = a.Elements[i]
+	fmt.Println("扩容：", a.size, oldCapacity, newCapacity)
+	for i := 0; i < a.size; i++ {
+		newElements[i] = a.elements[i]
 	}
 
-	a.Elements = newElements
+	a.elements = newElements
 }
 
 // 内存使用紧张进行缩容，但是当扩容和缩容时机不恰当，会导致，时间复杂度震荡，（扩容倍数 * 缩容倍数 = 1）
 func (a *ArrayList) trim() {
 
-	oldCapacity := len(a.Elements)
-	newCapacity := len(a.Elements)>>1
-	if a.Size > oldCapacity >> 1  || oldCapacity <= DefaultCapacity {
+	oldCapacity := len(a.elements)
+	newCapacity := len(a.elements)>>1
+	if a.size > oldCapacity >> 1  || oldCapacity <= DefaultCapacity {
 		return
 	}
 
 
 	newElements := make([]interface{}, newCapacity)
 
-	fmt.Println("缩容：", a.Size, len(a.Elements), newCapacity)
-	for i := 0; i < a.Size; i++ {
-		newElements[i] = a.Elements[i]
+	fmt.Println("缩容：", a.size, len(a.elements), newCapacity)
+	for i := 0; i < a.size; i++ {
+		newElements[i] = a.elements[i]
 	}
 
-	a.Elements = newElements
+	a.elements = newElements
 }
 
 func (a *ArrayList) String() string {
 	var buffer bytes.Buffer
 
-	buffer.WriteString(fmt.Sprintf("ArrayList: size = %d ", a.Size))
+	buffer.WriteString(fmt.Sprintf("ArrayList: size = %d ", a.size))
 	buffer.WriteString("[")
-	for i := 0; i < a.Size; i++ {
+	for i := 0; i < a.size; i++ {
 		if i != 0 {
 			buffer.WriteString(", ")
 		}
-		buffer.WriteString(fmt.Sprint(a.Elements[i]))
+		buffer.WriteString(fmt.Sprint(a.elements[i]))
 	}
 
 	buffer.WriteString("]")
@@ -197,7 +196,7 @@ func (a *ArrayList) String() string {
 }
 
 //func main() {
-//	list := NewArrayList(1)
+//	list := New(1)
 //	for i := 0; i < 50; i++ {
 //		list.add(i)
 //	}
