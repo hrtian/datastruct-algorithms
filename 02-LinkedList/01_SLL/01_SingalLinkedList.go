@@ -12,8 +12,8 @@ var ElementNotFound = -1
 
 // 01_SLL is a signal linked VNode;
 type SLL struct {
-	Size  int
-	First *SNode
+	size  int
+	first *SNode
 }
 
 type SNode struct {
@@ -21,36 +21,36 @@ type SNode struct {
 	Next *SNode
 }
 
-func (l *SLL) clear() {
-	l.Size = 0
-	l.First = nil
+func (l *SLL) Clear() {
+	l.size = 0
+	l.first = nil
 }
 
-func (l *SLL) size() int {
-	return l.Size
+func (l *SLL) Size() int {
+	return l.size
 }
 
-func (l *SLL) isEmpty() bool {
-	return l.Size == 0
+func (l *SLL) IsEmpty() bool {
+	return l.size == 0
 }
 
-func (l *SLL) contains(e interface{}) bool {
-	return l.indexOf(e) != ElementNotFound
+func (l *SLL) Contains(e interface{}) bool {
+	return l.IndexOf(e) != ElementNotFound
 }
 
-func (l *SLL) add(e interface{}) {
-	l.addIndex(l.Size, e)
+func (l *SLL) Add(e interface{}) {
+	l.AddIndex(l.size, e)
 }
 
-func (l *SLL) addIndex(index int, e interface{}) {
+func (l *SLL) AddIndex(index int, e interface{}) {
 	if index == 0 {
-		next := l.First
-		l.First = &SNode{
+		next := l.first
+		l.first = &SNode{
 			Val:  e,
 			Next: next,
 		}
 	} else {
-		prev := l.findNode(index - 1)
+		prev := l.Node(index - 1)
 		next := prev.Next
 		prev.Next = &SNode{
 			Val:  e,
@@ -58,33 +58,33 @@ func (l *SLL) addIndex(index int, e interface{}) {
 		}
 	}
 
-	l.Size++
+	l.size++
 }
 
-func (l *SLL) set(index int, e interface{}) interface{} {
-	node := l.findNode(index)
+func (l *SLL) Set(index int, e interface{}) interface{} {
+	node := l.Node(index)
 	old := node.Val
 	node.Val = e
 	return old
 }
 
-func (l *SLL) remove(index int) interface{} {
-	old := l.First.Val
+func (l *SLL) Remove(index int) interface{} {
+	old := l.first.Val
 	if index == 0 {
-		l.First = l.First.Next
+		l.first = l.first.Next
 	} else {
-		prev := l.findNode(index - 1)
+		prev := l.Node(index - 1)
 		old = prev.Next.Val
 		prev.Next = prev.Next.Next
 	}
-	l.Size--
+	l.size--
 	return old
 }
 
-func (l *SLL) indexOf(e interface{}) int {
-	node := l.First
+func (l *SLL) IndexOf(e interface{}) int {
+	node := l.first
 
-	for i := 0; i < l.Size; i++ {
+	for i := 0; i < l.size; i++ {
 		if node.Val == e {
 			return i
 		}
@@ -93,12 +93,12 @@ func (l *SLL) indexOf(e interface{}) int {
 	return ElementNotFound
 }
 
-func (l *SLL) findNode(index int) *SNode {
-	if index < 0 || index >= l.Size {
-		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange", index, l.Size))
+func (l *SLL) Node(index int) *SNode {
+	if index < 0 || index >= l.size {
+		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange", index, l.size))
 	}
 
-	node := l.First
+	node := l.first
 
 	for ; index > 0; index-- {
 		node = node.Next
@@ -108,10 +108,10 @@ func (l *SLL) findNode(index int) *SNode {
 
 func (l *SLL) String() string {
 	var buffer bytes.Buffer
-	buffer.WriteString(fmt.Sprintf("type: 01_SLL, size: %d, [", l.Size))
-	node := l.First
+	buffer.WriteString(fmt.Sprintf("type: 01_SLL, size: %d, [", l.size))
+	node := l.first
 
-	for i := 0; i < l.Size; i++ {
+	for i := 0; i < l.size; i++ {
 		if i != 0 {
 			buffer.WriteString(", ")
 		}
@@ -122,7 +122,7 @@ func (l *SLL) String() string {
 	return buffer.String()
 }
 
-func main() {
+//func main() {
 	//_ := &SNode{
 	//	Val: 1,
 	//	Next: &SNode{
@@ -142,5 +142,4 @@ func main() {
 	//		},
 	//	},
 	//}
-
-}
+//}

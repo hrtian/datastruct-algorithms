@@ -14,34 +14,34 @@ type DNode struct {
 
 // 03_DLL is a struct for double linked list
 type DLL struct {
-	Size  int
-	First *DNode
-	Last  *DNode
+	size  int
+	first *DNode
+	last  *DNode
 }
 
-func newDLL() *DLL {
+func New() *DLL {
 	list := new(DLL)
 
-	list.First = new(DNode)
-	list.Last = new(DNode)
-	list.First.Next = list.Last
-	list.Last.Prev = list.First
+	list.first = new(DNode)
+	list.last = new(DNode)
+	list.first.Next = list.last
+	list.last.Prev = list.first
 
 	return list
 }
 
-func (l *DLL) addIndex(index int, e interface{}) {
-	if index > l.Size {
-		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange\n", index, l.Size))
+func (l *DLL) AddIndex(index int, e interface{}) {
+	if index > l.size {
+		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange\n", index, l.size))
 	}
 
 	var aim *DNode
 	if index == 0 {
-		aim = l.First.Next
-	} else if index == l.Size {
-		aim = l.Last
+		aim = l.first.Next
+	} else if index == l.size {
+		aim = l.last
 	} else {
-		aim = l.node(index)
+		aim = l.Node(index)
 	}
 
 	prev := aim.Prev
@@ -53,22 +53,22 @@ func (l *DLL) addIndex(index int, e interface{}) {
 
 	aim.Prev = newNode
 	prev.Next = newNode
-	l.Size++
+	l.size++
 }
 
-func (l *DLL) add(e interface{}) {
-	l.addIndex(l.Size, e)
+func (l *DLL) Add(e interface{}) {
+	l.AddIndex(l.size, e)
 }
 
-func (l *DLL) set(index int, e interface{}) interface{} {
-	node := l.node(index)
+func (l *DLL) Set(index int, e interface{}) interface{} {
+	node := l.Node(index)
 	old := node.Val
 	node.Val = e
 	return old
 }
 
-func (l *DLL) remove(index int) interface{} {
-	aim := l.node(index)
+func (l *DLL) Remove(index int) interface{} {
+	aim := l.Node(index)
 	prev := aim.Prev
 	next := aim.Next
 	old := aim.Val
@@ -79,17 +79,17 @@ func (l *DLL) remove(index int) interface{} {
 	return old
 }
 
-func (l *DLL) get(index int) interface{} {
-	return l.node(index).Val
+func (l *DLL) Get(index int) interface{} {
+	return l.Node(index).Val
 }
 
-func (l *DLL) indexOf(e interface{}) int {
-	if l.Size == 0 {
+func (l *DLL) IndexOf(e interface{}) int {
+	if l.size == 0 {
 		return -1
 	}
 
-	node := l.First.Next
-	for i := 0; i < l.Size; i++ {
+	node := l.first.Next
+	for i := 0; i < l.size; i++ {
 		if node.Val == e {
 			return i
 		}
@@ -100,26 +100,26 @@ func (l *DLL) indexOf(e interface{}) int {
 	return -1
 }
 
-func (l *DLL) clear() {
-	l.Size = 0
-	l.First = nil
-	l.Last = nil
+func (l *DLL) Clear() {
+	l.size = 0
+	l.first = nil
+	l.last = nil
 }
 
-func (l *DLL) node(index int) *DNode {
-	if index < 0 || index >= l.Size {
-		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange\n", index, l.Size))
+func (l *DLL) Node(index int) *DNode {
+	if index < 0 || index >= l.size {
+		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange\n", index, l.size))
 	}
 
 	var node *DNode
-	if index < l.Size>>1 {
-		node = l.First.Next
+	if index < l.size>>1 {
+		node = l.first.Next
 		for i := 0; i < index; i++ {
 			node = node.Next
 		}
 	} else {
-		node = l.Last.Prev
-		for i := l.Size - 1; i > index; i-- {
+		node = l.last.Prev
+		for i := l.size - 1; i > index; i-- {
 			node = node.Prev
 		}
 	}
@@ -129,10 +129,10 @@ func (l *DLL) node(index int) *DNode {
 
 func (l *DLL) String() string {
 	var buffer bytes.Buffer
-	buffer.WriteString(fmt.Sprintf("type: 03_DLL, size: %d, [", l.Size))
-	node := l.First.Next
+	buffer.WriteString(fmt.Sprintf("type: 03_DLL, size: %d, [", l.size))
+	node := l.first.Next
 
-	for i := 0; i < l.Size; i++ {
+	for i := 0; i < l.size; i++ {
 		if i != 0 {
 			buffer.WriteString(", ")
 		}

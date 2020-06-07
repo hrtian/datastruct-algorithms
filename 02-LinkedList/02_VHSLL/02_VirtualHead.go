@@ -20,7 +20,7 @@ type VNode struct {
 	next *VNode
 }
 
-func newLinkedList() *LinkedListVh {
+func New() *LinkedListVh {
 	l := new(LinkedListVh)
 	l.first = new(VNode)
 	l.first.next = nil
