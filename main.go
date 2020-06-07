@@ -1,6 +1,6 @@
 package main
 
-import(
+import (
 	"code.golang.com/Datastruct/03-Stack/01_ArrayStack"
 	"fmt"
 )

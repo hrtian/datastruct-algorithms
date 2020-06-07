@@ -123,23 +123,23 @@ func (l *SLL) String() string {
 }
 
 //func main() {
-	//_ := &SNode{
-	//	Val: 1,
-	//	Next: &SNode{
-	//		Val: 4,
-	//		Next: &SNode{
-	//			Val: 2,
-	//			Next: &SNode{
-	//				Val: 5,
-	//				Next: &SNode{
-	//					Val: 3,
-	//					Next: &SNode{
-	//						Val:  6,
-	//						Next: nil,
-	//					},
-	//				},
-	//			},
-	//		},
-	//	},
-	//}
+//_ := &SNode{
+//	Val: 1,
+//	Next: &SNode{
+//		Val: 4,
+//		Next: &SNode{
+//			Val: 2,
+//			Next: &SNode{
+//				Val: 5,
+//				Next: &SNode{
+//					Val: 3,
+//					Next: &SNode{
+//						Val:  6,
+//						Next: nil,
+//					},
+//				},
+//			},
+//		},
+//	},
+//}
 //}

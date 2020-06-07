@@ -66,7 +66,11 @@ func (l *LinkedListVh) add(e interface{}) {
 // override the addIndex function O(1)  O(n)
 func (l *LinkedListVh) addIndex(index int, e interface{}) {
 	var prev *VNode
-	if index == 0 { prev = l.first } else { prev = l.findNode(index - 1) }
+	if index == 0 {
+		prev = l.first
+	} else {
+		prev = l.findNode(index - 1)
+	}
 
 	next := prev.next
 	prev.next = &VNode{
@@ -81,7 +85,11 @@ func (l *LinkedListVh) addIndex(index int, e interface{}) {
 func (l *LinkedListVh) remove(index int) interface{} {
 	var prev *VNode
 
-	if index == 0 { prev = l.first } else { prev = l.findNode(index - 1) }
+	if index == 0 {
+		prev = l.first
+	} else {
+		prev = l.findNode(index - 1)
+	}
 
 	old := prev.next.e
 	prev.next = prev.next.next
