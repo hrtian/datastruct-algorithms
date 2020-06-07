@@ -1,4 +1,4 @@
-package main
+package VHLL
 
 import (
 	"bytes"
@@ -134,13 +134,13 @@ func (l *LinkedListVh) String() string {
 	return buffer.String()
 }
 
-func main() {
-	list := newLinkedList()
-	list.add(0)
-	list.add(1)
-	list.remove(0)
-	fmt.Println(list.indexOf(1))
-	list.add(2)
-	list.add(3)
-	fmt.Println(list)
-}
+//func main() {
+//	list := newLinkedList()
+//	list.add(0)
+//	list.add(1)
+//	list.remove(0)
+//	fmt.Println(list.indexOf(1))
+//	list.add(2)
+//	list.add(3)
+//	fmt.Println(list)
+//}

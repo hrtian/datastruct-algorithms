@@ -1,4 +1,4 @@
-package main
+package _1_SLL
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 // ENotFound is a return-number for search element;
 var ElementNotFound = -1
 
-// SLL is a signal linked VNode;
+// 01_SLL is a signal linked VNode;
 type SLL struct {
 	Size  int
 	First *SNode
@@ -108,7 +108,7 @@ func (l *SLL) findNode(index int) *SNode {
 
 func (l *SLL) String() string {
 	var buffer bytes.Buffer
-	buffer.WriteString(fmt.Sprintf("type: SLL, size: %d, [", l.Size))
+	buffer.WriteString(fmt.Sprintf("type: 01_SLL, size: %d, [", l.Size))
 	node := l.First
 
 	for i := 0; i < l.Size; i++ {

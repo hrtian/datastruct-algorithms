@@ -5,37 +5,37 @@ import (
 	"fmt"
 )
 
-// DNode is double linked list node
-type DNode struct {
+// CDNode is double linked list node
+type CDNode struct {
 	Val  interface{}
-	Prev *DNode
-	Next *DNode
+	Prev *CDNode
+	Next *CDNode
 }
 
-// DLL is a struct for double linked list
-type DLL struct {
+// 03_DLL is a struct for double linked list
+type CDLL struct {
 	Size  int
-	First *DNode
-	Last  *DNode
+	First *CDNode
+	Last  *CDNode
 }
 
-func newDLL() *DLL {
-	list := new(DLL)
+func newCDLL() *CDLL {
+	list := new(CDLL)
 
-	list.First = new(DNode)
-	list.Last = new(DNode)
+	list.First = new(CDNode)
+	list.Last = new(CDNode)
 	list.First.Next = list.Last
 	list.Last.Prev = list.First
 
 	return list
 }
 
-func (l *DLL) addIndex(index int, e interface{}) {
+func (l *CDLL) addIndex(index int, e interface{}) {
 	if index > l.Size {
 		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange\n", index, l.Size))
 	}
 
-	var aim *DNode
+	var aim *CDNode
 	if index == 0 {
 		aim = l.First.Next
 	} else if index == l.Size {
@@ -45,7 +45,7 @@ func (l *DLL) addIndex(index int, e interface{}) {
 	}
 
 	prev := aim.Prev
-	newNode := &DNode{
+	newNode := &CDNode{
 		Val:  e,
 		Prev: prev,
 		Next: aim,
@@ -56,18 +56,18 @@ func (l *DLL) addIndex(index int, e interface{}) {
 	l.Size++
 }
 
-func (l *DLL) add(e interface{}) {
+func (l *CDLL) add(e interface{}) {
 	l.addIndex(l.Size, e)
 }
 
-func (l *DLL) set(index int, e interface{}) interface{} {
+func (l *CDLL) set(index int, e interface{}) interface{} {
 	node := l.node(index)
 	old := node.Val
 	node.Val = e
 	return old
 }
 
-func (l *DLL) remove(index int) interface{} {
+func (l *CDLL) remove(index int) interface{} {
 	aim := l.node(index)
 	prev := aim.Prev
 	next := aim.Next
@@ -79,11 +79,11 @@ func (l *DLL) remove(index int) interface{} {
 	return old
 }
 
-func (l *DLL) get(index int) interface{} {
+func (l *CDLL) get(index int) interface{} {
 	return l.node(index).Val
 }
 
-func (l *DLL) indexOf(e interface{}) int {
+func (l *CDLL) indexOf(e interface{}) int {
 	if l.Size == 0 {
 		return -1
 	}
@@ -100,18 +100,18 @@ func (l *DLL) indexOf(e interface{}) int {
 	return -1
 }
 
-func (l *DLL) clear() {
+func (l *CDLL) clear() {
 	l.Size = 0
 	l.First = nil
 	l.Last = nil
 }
 
-func (l *DLL) node(index int) *DNode {
+func (l *CDLL) node(index int) *CDNode {
 	if index < 0 || index >= l.Size {
 		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange\n", index, l.Size))
 	}
 
-	var node *DNode
+	var node *CDNode
 	if index < l.Size>>1 {
 		node = l.First.Next
 		for i := 0; i < index; i++ {
@@ -127,9 +127,9 @@ func (l *DLL) node(index int) *DNode {
 	return node
 }
 
-func (l *DLL) String() string {
+func (l *CDLL) String() string {
 	var buffer bytes.Buffer
-	buffer.WriteString(fmt.Sprintf("type: DLL, size: %d, [", l.Size))
+	buffer.WriteString(fmt.Sprintf("type: CDLL, size: %d, [", l.Size))
 	node := l.First.Next
 
 	for i := 0; i < l.Size; i++ {
@@ -144,13 +144,6 @@ func (l *DLL) String() string {
 }
 
 func main() {
-	list := newDLL()
-	list.add(0)
-	fmt.Println(list.Size, list)
-	list.add(1)
-	fmt.Println(list.Size, list)
-	list.add(2)
-	fmt.Println(list.Size, list)
-	list.add(3)
-	fmt.Println(list.Size, list)
+	list := newCDLL()
+	fmt.Println(list)
 }

@@ -1,4 +1,4 @@
-package main
+package arrayList
 
 import (
 	"bytes"
@@ -196,13 +196,13 @@ func (a *ArrayList) String() string {
 	return buffer.String()
 }
 
-func main() {
-	list := NewArrayList(1)
-	for i := 0; i < 50; i++ {
-		list.add(i)
-	}
-
-	for i := 49; i >= 0; i-- {
-		list.removeIndex(i)
-	}
-}
+//func main() {
+//	list := NewArrayList(1)
+//	for i := 0; i < 50; i++ {
+//		list.add(i)
+//	}
+//
+//	for i := 49; i >= 0; i-- {
+//		list.removeIndex(i)
+//	}
+//}
