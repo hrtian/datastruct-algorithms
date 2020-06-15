@@ -36,6 +36,10 @@ func (s *Stack) Peek() interface{} {
 	return s.data.IndexOf(s.Size() - 1)
 }
 
+func (s *Stack) Clear() {
+	s.data.Clear()
+}
+
 func (s *Stack) String() string {
 	var buffer bytes.Buffer
 	buffer.WriteString(fmt.Sprintf("Stack: ["))

@@ -30,6 +30,14 @@ func New() *DLL {
 	return list
 }
 
+func (l *DLL) Size() int {
+	return l.size
+}
+
+func (l *DLL) IsEmpty() bool {
+	return l.size == 0
+}
+
 func (l *DLL) AddIndex(index int, e interface{}) {
 	if index > l.size {
 		panic(fmt.Sprintf("index = %d, size = %d, OutOfRange\n", index, l.size))
