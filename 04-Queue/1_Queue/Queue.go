@@ -1,7 +1,9 @@
 package Queue
 
 import (
+	"bytes"
 	"code.golang.com/Datastruct/02-LinkedList/03_DLL"
+	"fmt"
 )
 
 type Queue struct {
@@ -38,3 +40,16 @@ func (q *Queue) Clear() {
 	q.data.Clear()
 }
 
+func (q *Queue) String() string {
+	var buffer bytes.Buffer
+	buffer.WriteString(fmt.Sprintf("type: Queue, size: %d, [", q.data.Size()))
+
+	for i := 0; i < q.data.Size(); i++ {
+		if i != 0 {
+			buffer.WriteString(", ")
+		}
+		buffer.WriteString(fmt.Sprint(q.data.Get(i)))
+	}
+	buffer.WriteString("]")
+	return buffer.String()
+}

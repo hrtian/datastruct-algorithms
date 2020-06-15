@@ -1,20 +1,26 @@
 package main
 
 import (
-	Queue "code.golang.com/Datastruct/04-Queue"
+	DEQueue "code.golang.com/Datastruct/04-Queue/2_DEQueue"
 	"fmt"
 )
 
-func main(){
-	q := Queue.New()
-	q.EnQueue(11)
-	q.EnQueue(22)
-	q.EnQueue(33)
-	q.EnQueue(44)
+func main() {
+	q := DEQueue.New()
+	q.EnQueueRear(22)
+	q.EnQueueFront(11)
+	q.EnQueueRear(33)
+	q.EnQueueRear(44)
+
+	fmt.Println(q)
+
+	q.DeQueueFront()
+	q.DeQueueRear()
+
+	fmt.Println(q)
 
 	for !q.IsEmpty() {
-		fmt.Println(q.DeQueue())
+		fmt.Println(q.DeQueueFront())
 		fmt.Println(q.IsEmpty())
 	}
-
 }
