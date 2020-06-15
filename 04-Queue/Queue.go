@@ -22,19 +22,19 @@ func (q *Queue) IsEmpty() bool {
 	return q.data.IsEmpty()
 }
 
-func (q *Queue) enQueue(e interface{}) {
+func (q *Queue) EnQueue(e interface{}) {
 	q.data.Add(e)
 }
 
-func (q *Queue) deQueue() interface{} {
+func (q *Queue) DeQueue() interface{} {
 	return q.data.Remove(0)
 }
 
-func (q *Queue) front() interface{} {
-	q.data.Get(0)
+func (q *Queue) Front() interface{} {
+	return q.data.Get(0)
 }
 
-func (q *Queue) clear() {
+func (q *Queue) Clear() {
 	q.data.Clear()
 }
 

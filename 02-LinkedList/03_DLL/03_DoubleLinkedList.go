@@ -83,7 +83,7 @@ func (l *DLL) Remove(index int) interface{} {
 
 	next.Prev = prev
 	prev.Next = next
-
+	l.size--
 	return old
 }
 
