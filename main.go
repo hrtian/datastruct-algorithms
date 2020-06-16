@@ -1,37 +1,29 @@
 package main
 
 import (
-	Circle_Queue "code.golang.com/Datastruct/04-Queue/3_Circle_Queue"
+	Circle_DEQueue "code.golang.com/Datastruct/04-Queue/4_Circle_DEQueue"
 	"fmt"
 )
 
 func main() {
-	q := Circle_Queue.New(4)
-	q.EnQueue(1)
-	q.EnQueue(2)
-	q.EnQueue(3)
-	q.EnQueue(4)
+	q := Circle_DEQueue.New(4)
+	q.EnQueueRear(2)
+	q.EnQueueFront(1)
+	q.EnQueueRear(3)
+	q.EnQueueRear(4)
+	fmt.Println(q) // 1 2 3 4
 
+	q.DeQueueFront()
+	q.DeQueueRear()
+	fmt.Println(q) // _ 2 3 _
+
+	q.EnQueueFront(1)
+	q.EnQueueFront(4)
 	fmt.Println(q)
 
-	q.DeQueue()
-	q.DeQueue()
+	q.EnQueueFront(0)
+	q.EnQueueFront(0)
+	q.EnQueueFront(0)
+	q.EnQueueFront(0)
 	fmt.Println(q)
-	q.EnQueue(0)
-	q.EnQueue(-1)
-	fmt.Println(q)
-	q.EnQueue(5)
-	fmt.Println(q)
-
-	q.EnQueue(6)
-	fmt.Println(q)
-
-	q.EnQueue(7)
-	q.EnQueue(8)
-	q.EnQueue(9)
-	q.EnQueue(10)
-
-	fmt.Println(q)
-
-
 }

@@ -44,6 +44,17 @@ func (cq *CQueue) EnQueue(e interface{}) {
 	cq.size++
 }
 
+func (cq *CQueue) DeQueue() interface{} {
+	if cq.size == 0 {
+		panic(fmt.Sprintf("No element in CQueue"))
+	}
+	old := cq.data[cq.front]
+	cq.data[cq.front] = nil
+	cq.size--
+	cq.front = cq.index(1)
+	return old
+}
+
 func (cq *CQueue) EnsureCapacity(capacity int) {
 	oldCapacity := len(cq.data)
 	if oldCapacity >= capacity {
@@ -57,17 +68,6 @@ func (cq *CQueue) EnsureCapacity(capacity int) {
 	}
 	cq.front = 0
 	cq.data = newData
-}
-
-func (cq *CQueue) DeQueue() interface{} {
-	if cq.size == 0 {
-		panic(fmt.Sprintf("No element in CQueue"))
-	}
-	old := cq.data[cq.front]
-	cq.data[cq.front] = nil
-	cq.size--
-	cq.front = cq.index(1)
-	return old
 }
 
 func (cq *CQueue) index(idx int) int {
