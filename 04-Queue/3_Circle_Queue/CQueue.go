@@ -71,7 +71,18 @@ func (cq *CQueue) EnsureCapacity(capacity int) {
 }
 
 func (cq *CQueue) index(idx int) int {
-	return (idx + cq.front) % len(cq.data)
+	if idx+cq.front >= len(cq.data) {
+		return idx + cq.front - len(cq.data)
+	} else {
+		return idx + cq.front
+	}
+}
+
+func (cq *CQueue) Clear() {
+	cq.size = 0
+	for i := 0; i < len(cq.data); i++ {
+		cq.data[i] = nil
+	}
 }
 
 func (cq *CQueue) String() string {

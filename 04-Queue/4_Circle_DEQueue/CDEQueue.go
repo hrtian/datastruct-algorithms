@@ -95,6 +95,13 @@ func (this *CDEQueue) EnsureCapacity(capacity int) {
 	this.data = newData
 }
 
+func (this *CDEQueue) Clear() {
+	this.size = 0
+	for i := 0; i < len(this.data); i++ {
+		this.data[i] = nil
+	}
+}
+
 func (this *CDEQueue) index(idx int) int {
 	if idx+this.front >= 0 {
 
