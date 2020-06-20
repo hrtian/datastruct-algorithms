@@ -1,8 +1,10 @@
-package Utils
+package utils
 
 import "reflect"
 
-func Compare(a, b interface{}) int {
+
+// Comparator is use for comparating two variables which kind is interface{}
+func Comparator(a, b interface{}) int {
 	aType := reflect.TypeOf(a).String()
 	bType := reflect.TypeOf(b).String()
 

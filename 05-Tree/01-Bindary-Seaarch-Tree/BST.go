@@ -1,8 +1,9 @@
-package BST
+package bst
 
 import (
-	"code.golang.com/Datastruct/Utils"
 	"errors"
+
+	utils "code.golang.com/Datastruct/Utils"
 )
 
 type node struct {
@@ -19,27 +20,36 @@ func newNode(e interface{}, parent *node) *node {
 	}
 }
 
+// BST is a data struct of tree, binary search tree
 type BST struct {
-	size int
-	root *node
+	comparator func(interface{}, interface{}) int
+	root       *node
+	size       int
 }
 
-func New() *BST {
-	return &BST{}
+// New is a construct function for BST, you shoulld specify a comparator
+func New(comparator func(interface{}, interface{}) int) *BST {
+	return &BST{
+		comparator: comparator,
+	}
 }
 
+// Size is function for getting size of bst
 func (b *BST) Size() int {
 	return b.size
 }
 
+// IsEmpty is function for that it is empty of bst
 func (b *BST) IsEmpty() bool {
 	return b.size == 0
 }
 
+// Clear is a function for clear BST elements
 func (b *BST) Clear() {
 	b.size = 0
 }
 
+// Add is a function for add element to BST
 func (b *BST) Add(e interface{}) error {
 	if e == nil {
 		return errors.New("element must not be nil")
@@ -53,8 +63,8 @@ func (b *BST) Add(e interface{}) error {
 
 	parentNode, tmpNode, ret := new(node), b.root, 0
 
-	for ; tmpNode != nil; {
-		ret = Utils.Compare(e, tmpNode.val)
+	for tmpNode != nil {
+		ret = b.comparate(e, tmpNode.val)
 		parentNode = tmpNode
 
 		if ret > 0 {
@@ -76,6 +86,7 @@ func (b *BST) Add(e interface{}) error {
 
 }
 
+// Remove is a function for remove element from BST
 func (b *BST) Remove(e interface{}) {
 	// todo
 }
@@ -83,3 +94,11 @@ func (b *BST) Remove(e interface{}) {
 //func (b *BST) Contains(e interface{}) bool {
 //	// todo
 //}
+
+func (b *BST) comparate(e1, e2 interface{}) int {
+	if b.comparator == nil {
+		return utils.Comparator(e1, e2)
+	}
+
+	return b.comparator(e1, e2)
+}
