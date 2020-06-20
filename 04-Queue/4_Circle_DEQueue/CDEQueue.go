@@ -96,10 +96,11 @@ func (this *CDEQueue) EnsureCapacity(capacity int) {
 }
 
 func (this *CDEQueue) Clear() {
-	this.size = 0
-	for i := 0; i < len(this.data); i++ {
-		this.data[i] = nil
+	for i := 0; i < this.size; i++{
+		this.data[this.index(i)] = nil
+
 	}
+	this.size, this.front = 0, 0
 }
 
 func (this *CDEQueue) index(idx int) int {

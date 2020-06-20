@@ -26,4 +26,6 @@ func main() {
 	q.EnQueueFront(0)
 	q.EnQueueFront(0)
 	fmt.Println(q)
+	q.Clear()
+	fmt.Println(q)
 }

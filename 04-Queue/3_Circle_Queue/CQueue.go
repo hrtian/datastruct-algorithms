@@ -78,11 +78,12 @@ func (cq *CQueue) index(idx int) int {
 	}
 }
 
-func (cq *CQueue) Clear() {
-	cq.size = 0
-	for i := 0; i < len(cq.data); i++ {
-		cq.data[i] = nil
+func (this *CDEQueue) Clear() {
+	for i := 0; i < this.size; i++{
+		this.data[this.index(i)] = nil
+
 	}
+	this.size, this.front = 0, 0
 }
 
 func (cq *CQueue) String() string {
