@@ -1,31 +1,18 @@
 package main
 
 import (
-	Circle_DEQueue "code.golang.com/Datastruct/04-Queue/4_Circle_DEQueue"
+	"code.golang.com/Datastruct/05-Tree/01-Bindary-Seaarch-Tree"
 	"fmt"
 )
 
 func main() {
-	q := Circle_DEQueue.New(4)
-	q.EnQueueRear(2)
-	q.EnQueueFront(1)
-	q.EnQueueRear(3)
-	q.EnQueueRear(4)
-	fmt.Println(q) // 1 2 3 4
+	arr := []int{7, 4, 9, 2, 5, 8, 11, 1, 3}
 
-	q.DeQueueFront()
-	q.DeQueueRear()
-	fmt.Println(q) // _ 2 3 _
+	bst := BST.New()
 
-	q.EnQueueFront(1)
-	q.EnQueueFront(4)
-	fmt.Println(q)
+	for v, _ := range arr {
+		bst.Add(v)
+	}
 
-	q.EnQueueFront(0)
-	q.EnQueueFront(0)
-	q.EnQueueFront(0)
-	q.EnQueueFront(0)
-	fmt.Println(q)
-	q.Clear()
-	fmt.Println(q)
+	fmt.Println(bst)
 }
