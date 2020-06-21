@@ -2,6 +2,9 @@ package bst
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 
 	utils "code.golang.com/Datastruct/Utils"
 )
@@ -72,7 +75,7 @@ func (b *BST) Add(e interface{}) error {
 		} else if ret < 0 {
 			tmpNode = tmpNode.left
 		} else {
-			return nil
+			tmpNode.val = e
 		}
 	}
 

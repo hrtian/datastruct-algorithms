@@ -78,7 +78,7 @@ func (cq *CQueue) index(idx int) int {
 	}
 }
 
-func (this *CDEQueue) Clear() {
+func (this *CQueue) Clear() {
 	for i := 0; i < this.size; i++{
 		this.data[this.index(i)] = nil
 
