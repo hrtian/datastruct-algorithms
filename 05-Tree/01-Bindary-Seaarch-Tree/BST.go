@@ -1,9 +1,17 @@
 package bst
 
 import (
+	"bytes"
 	utils "code.golang.com/Datastruct/Utils"
 	"errors"
+	"fmt"
+	"math"
 )
+
+type Visitor struct {
+	Visit func(e interface{}) bool
+	Stop  bool
+}
 
 // node is a tree node, export for travel.
 type node struct {
@@ -27,26 +35,11 @@ type BST struct {
 	size       int
 }
 
-// New is a construct function for BST, you shoulld specify a comparator
+// New is a construct function for BST, you should specify a comparator
 func New(comparator func(interface{}, interface{}) int) *BST {
 	return &BST{
 		comparator: comparator,
 	}
-}
-
-// Size is function for getting size of bst
-func (b *BST) Size() int {
-	return b.size
-}
-
-// IsEmpty is function for that it is empty of bst
-func (b *BST) IsEmpty() bool {
-	return b.size == 0
-}
-
-// Clear is a function for clear BST elements
-func (b *BST) Clear() {
-	b.size = 0
 }
 
 // Add is a function for add element to BST
@@ -88,81 +81,116 @@ func (b *BST) Add(e interface{}) error {
 
 }
 
-// Remove is a function for remove element from BST
-//func (b *BST) Remove(e interface{}) {
-//	// todo
-//}
-
-//func (b *BST) Contains(e interface{}) bool {
-//	// todo
-//}
-
-func (b *BST) compare(e1, e2 interface{}) int {
-	if b.comparator == nil {
-		return utils.Comparator(e1, e2)
-	}
-
-	return b.comparator(e1, e2)
+func (b *BST) Remove(e interface{}) bool {
+	return false
 }
 
-// PreRecur is a function for travel tree by root-in-first
-/*
- * @return void
- * @params visit func
- * @func recursion
- */
-func (b *BST) PreRecur(visit func(interface{})) {
+func (b *BST) Update(e interface{}) {
 
-	var preRecur func(*node, func(interface{}))
-	preRecur = func(root *node, visit func(interface{})) {
-		if root == nil {
+}
+
+func (b *BST) Search(e interface{}) *node {
+	return nil
+}
+
+// Size is function for getting size of bst
+func (b *BST) Size() int {
+	return b.size
+}
+
+// IsEmpty is function for that it is empty of bst
+func (b *BST) IsEmpty() bool {
+	return b.size == 0
+}
+
+// Clear is a function for clear BST elements
+func (b *BST) Clear() {
+	b.size = 0
+}
+
+/**
+ * travel elements in tree through four different functions
+ * @author: hirah
+ * @return: void
+ * @params: *Visitor
+ * @func: PreRecur InRecur PostRecur LevelTravel
+**/
+
+// PreRecur is a function for travel tree by root-in-first
+func (b *BST) PreRecur(V *Visitor) {
+	if V.Visit == nil || V.Stop || b.root == nil {
+		return
+	}
+
+	var preRecur func(*node, *Visitor)
+	preRecur = func(node *node, V *Visitor) {
+		// stop recursion
+		if node == nil || V.Stop {
 			return
 		}
 
-		visit(root.val)
-		preRecur(root.left, visit)
-		preRecur(root.right, visit)
+		V.Stop = V.Visit(node.val)
+		preRecur(node.left, V)
+		preRecur(node.right, V)
 	}
 
-	preRecur(b.root, visit)
+	preRecur(b.root, V)
 }
 
 // InRecur is a function for travel element by root-in-middle
-func (b *BST) InRecur(visit func(interface{})) {
-	var inRecur func(*node, func(interface{}))
-	inRecur = func(root *node, visit func(interface{})) {
-		if root == nil {
+func (b *BST) InRecur(V *Visitor) {
+	if V.Visit == nil || V.Stop || b.root == nil {
+		return
+	}
+
+	var inRecur func(*Visitor, *node)
+	inRecur = func(V *Visitor, node *node) {
+		// stop recursion
+		if node == nil || V.Stop {
 			return
 		}
 
-		inRecur(root.left, visit)
-		visit(root.val)
-		inRecur(root.right, visit)
+		inRecur(V, node.left)
+		// stop processing
+		if V.Stop {
+			return
+		}
+		V.Stop = V.Visit(node.val)
+		inRecur(V, node.right)
 	}
 
-	inRecur(b.root, visit)
+	inRecur(V, b.root)
 }
 
 // PostRecur is a function for travel element by root-in-last
-func (b *BST) PostRecur(visit func(interface{})) {
+func (b *BST) PostRecur(V *Visitor) {
+	if V.Visit == nil || V.Stop || b.root == nil {
+		return
+	}
 
-	var postRecur func(*node, func(interface{}))
-	postRecur = func(root *node, visit func(interface{})) {
-		if root == nil {
+	var postRecur func(*Visitor, *node)
+	postRecur = func(V *Visitor, node *node) {
+		// stop recursion
+		if node == nil || V.Stop {
 			return
 		}
 
-		postRecur(root.left, visit)
-		postRecur(root.right, visit)
-		visit(root.val)
+		postRecur(V, node.left)
+		postRecur(V, node.right)
+
+		// stop processing
+		if V.Stop {
+			return
+		}
+		V.Stop = V.Visit(node.val)
 	}
 
-	postRecur(b.root, visit)
+	postRecur(V, b.root)
 }
 
 // LevelTravel is a function for travel element by level.
-func (b *BST) LevelTravel(visit func(interface{}) bool) {
-	if b.root == nil || visit == nil {
+func (b *BST) LevelTravel(V *Visitor) {
+	if V.Visit == nil || V.Stop || b.root == nil {
 		return
 	}
 
@@ -171,10 +199,10 @@ func (b *BST) LevelTravel(visit func(interface{}) bool) {
 		v := queue[0]
 		queue = queue[1:]
 
-		if visit(v.val) {
+		if V.Stop = V.Visit(v.val); V.Stop {
 			return
 		}
-		
+
 		if v.left != nil {
 			queue = append(queue, v.left)
 		}
@@ -182,4 +210,104 @@ func (b *BST) LevelTravel(visit func(interface{}) bool) {
 			queue = append(queue, v.right)
 		}
 	}
+}
+
+func (b *BST) GetHByRecur() int {
+	var height func(*node) int
+	height = func(node *node) int {
+		if node == nil {
+			return 0
+		}
+		return 1 + int(math.Max(float64(height(node.left)), float64(height(node.right))))
+	}
+
+	return height(b.root)
+}
+
+func (b *BST) GetHByIota() int {
+	if b.root == nil {
+		return 0
+	}
+
+	tmp, height, level := []*node{b.root}, 0, 1
+
+	for len(tmp) != 0 {
+		// Queue processing
+		v := tmp[0]
+		tmp = tmp[1:]
+		level--
+
+		if v.left != nil {
+			tmp = append(tmp, v.left)
+		}
+
+		if v.right != nil {
+			tmp = append(tmp, v.right)
+		}
+
+		if level >= 0 {
+			height++
+			level = len(tmp)
+		}
+	}
+
+	return height
+}
+
+func (b *BST) IsComplete() bool {
+	if b.root == nil {
+		return false
+	}
+
+	tmp := []*node{b.root}
+	for len(tmp) > 0 {
+		v := tmp[0]
+		tmp = tmp[1:]
+
+		if v.left != nil {
+			tmp = append(tmp, v.left)
+		} else if v.right != nil {
+			return false
+		}
+
+		if v.right != nil {
+			tmp = append(tmp, v.right)
+		} else {
+			for _, v := range tmp {
+				if v.left != nil || v.right != nil {
+					return false
+				}
+			}
+		}
+	}
+	return true
+}
+
+// String is a function for printing Binary-Tree.
+func (b *BST) String() string {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString(fmt.Sprintf("BST:\n size: %d\n", b.size))
+
+	var toString func(*node, *bytes.Buffer, string)
+	toString = func(root *node, buffer *bytes.Buffer, prefix string) {
+		if root == nil {
+			return
+		}
+
+		toString(root.left, buffer, prefix+"---")
+		buffer.WriteString(prefix + fmt.Sprintf("%v\n", root.val))
+		// 注意递归时的buffer调用
+		toString(root.right, buffer, prefix+"---")
+	}
+
+	toString(b.root, buffer, "")
+	return buffer.String()
+}
+
+func (b *BST) compare(e1, e2 interface{}) int {
+	if b.comparator == nil {
+		return utils.Comparator(e1, e2)
+	}
+
+	return b.comparator(e1, e2)
 }
