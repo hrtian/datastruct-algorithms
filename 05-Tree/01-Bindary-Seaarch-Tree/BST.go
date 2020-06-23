@@ -2,12 +2,14 @@ package bst
 
 import (
 	"bytes"
-	utils "code.golang.com/Datastruct/Utils"
 	"errors"
 	"fmt"
 	"math"
+
+	utils "code.golang.com/Datastruct/Utils"
 )
 
+// Visitor is a struct using as a visitor function
 type Visitor struct {
 	Visit func(e interface{}) bool
 	Stop  bool
@@ -98,23 +100,33 @@ func (b *BST) Size() int {
 	return b.size
 }
 
-// IsEmpty is function for that it is empty of bst
-func (b *BST) IsEmpty() bool {
-	return b.size == 0
-}
-
 // Clear is a function for clear BST elements
 func (b *BST) Clear() {
 	b.size = 0
 }
 
-/**
+// IsEmpty is function for that it is empty of bst
+func (b *BST) IsEmpty() bool {
+	return b.size == 0
+}
+
+// IsLeaf is a for judging wheather the node is a leaf-node
+func IsLeaf(node *node) bool {
+	return node.left == nil && node.right == nil
+}
+
+// Has2Children is for judging wheather the node has two child-node
+func Has2Children(node *node) bool {
+	return node.left != nil && node.right != nil
+}
+
+/*
  * travel elements in tree through four different functions
- * @author: hirah
- * @return: void
- * @params: *Visitor
- * @func: PreRecur InRecur PostRecur LevelTravel
-**/
+ * @ author: hirah
+ * @ return: void
+ * @ params: *Visitor
+ * @ func: PreRecur InRecur PostRecur LevelTravel
+ */
 
 // PreRecur is a function for travel tree by root-in-first
 func (b *BST) PreRecur(V *Visitor) {
@@ -212,6 +224,7 @@ func (b *BST) LevelTravel(V *Visitor) {
 	}
 }
 
+// GetHByRecur is a function for get depth of binary tree through Recursion.
 func (b *BST) GetHByRecur() int {
 	var height func(*node) int
 	height = func(node *node) int {
@@ -224,6 +237,7 @@ func (b *BST) GetHByRecur() int {
 	return height(b.root)
 }
 
+// GetHByIota is a function for get depth of binary tree through Iota
 func (b *BST) GetHByIota() int {
 	if b.root == nil {
 		return 0
@@ -254,11 +268,20 @@ func (b *BST) GetHByIota() int {
 	return height
 }
 
+// IsComplete is a function for judging wheather the binary tree is a complete-binary-tree
 func (b *BST) IsComplete() bool {
 	if b.root == nil {
 		return false
 	}
 
+	/*
+	* left != nil enQueue
+	* left == nil, right != nil false
+	* right != nil enQueue
+	* left != nil, right == nil
+	* 							 ------> right == nil, 判断是否为叶子节点
+	* left == nil, right == nil
+	 */
 	tmp := []*node{b.root}
 	for len(tmp) > 0 {
 		v := tmp[0]
@@ -270,11 +293,11 @@ func (b *BST) IsComplete() bool {
 			return false
 		}
 
-		if v.right != nil {
+		if v.left != nil {
 			tmp = append(tmp, v.right)
 		} else {
 			for _, v := range tmp {
-				if v.left != nil || v.right != nil {
+				if !IsLeaf(v) {
 					return false
 				}
 			}
@@ -310,4 +333,49 @@ func (b *BST) compare(e1, e2 interface{}) int {
 	}
 
 	return b.comparator(e1, e2)
+}
+
+// ReverseBT is a function for reverse the left-node and right-node of parent-node
+func ReverseBT(b *BST) *BST {
+	var reverse func(*node)
+	reverse = func(root *node) {
+		if root == nil {
+			return
+		}
+		/*
+			preorder:
+			root.left, root.right = root.right, root.left
+			reverse(root.left)
+			reverse(root.right)
+
+			inorder:
+			reverse(root.left)
+			root.left, root.right = root.right, root.left
+			reverse(root.left)
+
+			postorder:
+			reverse(root.left)
+			reverse(root.right)
+			root.left, root.right = root.right, root.left
+		*/
+
+		tmp := []*node{root}
+
+		for len(tmp) > 0 {
+			v := tmp[0]
+			tmp = tmp[1:]
+
+			v.left, v.right = v.right, v.left
+			if v.left != nil {
+				tmp = append(tmp, v.left)
+			}
+			if v.right != nil {
+				tmp = append(tmp, v.right)
+			}
+		}
+
+	}
+
+	reverse(b.root)
+	return b
 }

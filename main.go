@@ -32,7 +32,11 @@ func main() {
 		}
 	}
 
-	/*visitor := func(e interface{}) bool {
+	fmt.Println(nBst)
+	fmt.Println(bst.ReverseBT(nBst))
+
+	/*
+	visitor := func(e interface{}) bool {
 		fmt.Printf("%v\t", e)
 		if utils.Comparator(e, 2) == 0 {
 			return true
@@ -50,9 +54,11 @@ func main() {
 	nBst.PostRecur(&bst.Visitor{Visit: visitor})
 
 	fmt.Println("\nLevelTravel:")
-	nBst.LevelTravel(&bst.Visitor{Visit: visitor})*/
+	nBst.LevelTravel(&bst.Visitor{Visit: visitor})
+	*/
 
-	/*for i := 0; i < 150; i++ {
+	/*
+	for i := 0; i < 150; i++ {
 		rand.Seed(time.Now().UnixNano())
 		if err := nBst.Add(rand.Intn(100)); err != nil {
 			panic(err)
@@ -60,7 +66,11 @@ func main() {
 	}
 	fmt.Println("-------- test --------")
 	fmt.Println(nBst.GetHByIota())
-	fmt.Println(nBst.GetHByRecur())*/
+	fmt.Println(nBst.GetHByRecur())
+	*/
+
+	/* 
 	fmt.Println(nBst)
-	fmt.Println(nBst.IsComplete())
+	fmt.Println(nBst.IsComplete()) 
+	*/
 }
