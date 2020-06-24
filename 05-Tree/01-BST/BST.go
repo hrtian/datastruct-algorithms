@@ -15,16 +15,16 @@ type Visitor struct {
 	Stop  bool
 }
 
-// node is a tree node, export for travel.
-type node struct {
+// Node is a tree Node, export for travel.
+type Node struct {
 	val    interface{}
-	left   *node
-	right  *node
-	parent *node
+	left   *Node
+	right  *Node
+	parent *Node
 }
 
-func newNode(e interface{}, parent *node) *node {
-	return &node{
+func newNode(e interface{}, parent *Node) *Node {
+	return &Node{
 		val:    e,
 		parent: parent,
 	}
@@ -33,7 +33,7 @@ func newNode(e interface{}, parent *node) *node {
 // BST is a data struct of tree, binary search tree
 type BST struct {
 	comparator func(interface{}, interface{}) int
-	root       *node
+	root       *Node
 	size       int
 }
 
@@ -44,8 +44,38 @@ func New(comparator func(interface{}, interface{}) int) *BST {
 	}
 }
 
-// Add is a function for add element to BST
-func (b *BST) Add(e interface{}) error {
+// AddByRecur is a function for add element to BST by recursion
+func (b *BST) AddByRecur(e interface{}) error {
+	if e == nil {
+		return errors.New("element must not be nil")
+	}
+
+	var add func(*Node, interface{}) *Node
+	add = func(node *Node, e interface{}) *Node {
+		if node == nil {
+			b.size++
+			return &Node{
+				val: e,
+			}
+		}
+		cmp := b.compare(e, node.val)
+		if cmp < 0 {
+			node.left = add(node.left, e)
+		} else if cmp > 0 {
+			node.right = add(node.right, e)
+		} else {
+			node.val = e
+		}
+		b.size++
+		return node
+	}
+
+	b.root = add(b.root, e)
+	return nil
+}
+
+// AddByIota is a function for add element to BST by iota
+func (b *BST) AddByIota(e interface{}) error {
 	if e == nil {
 		return errors.New("element must not be nil")
 	}
@@ -56,7 +86,7 @@ func (b *BST) Add(e interface{}) error {
 		return nil
 	}
 
-	parentNode, tmpNode, ret := new(node), b.root, 0
+	parentNode, tmpNode, ret := new(Node), b.root, 0
 
 	for tmpNode != nil {
 		ret = b.compare(e, tmpNode.val)
@@ -87,17 +117,68 @@ func (b *BST) Remove(e interface{}) bool {
 	return false
 }
 
-func (b *BST) Update(e interface{}) {
-
+// Update is a function for update node which val is old
+func (b *BST) Update(old, new interface{}) {
+	b.SearchByRec(old).val = new
 }
 
-func (b *BST) Search(e interface{}) *node {
+// SearchByRec is a function for get node which val is 'val' by recursion.
+func (b *BST) SearchByRec(e interface{}) *Node {
+	var get func(*Node, interface{}) *Node
+	get = func(node *Node, v interface{}) *Node {
+		if node == nil {
+			return nil
+		}
+
+		cmp := b.compare(e, node.val)
+		if cmp < 0 {
+			return get(node.left, e)
+		} else if cmp > 0 {
+			return get(node.right, e)
+		} else {
+			return node
+		}
+	}
+	return get(b.root, e)
+}
+
+// SearchByIota is a function for get node which val is 'val' by recursion.
+func (b *BST) SearchByIota(e interface{}) *Node {
+	if b.root == nil {
+		return nil
+	}
+
+	for tmpNode := b.root; tmpNode != nil; {
+		cmp := b.compare(e, tmpNode.val)
+		if cmp < 0 {
+			tmpNode = tmpNode.left
+		} else if cmp > 0 {
+			tmpNode = tmpNode.right
+		} else {
+			return tmpNode
+		}
+	}
 	return nil
+}
+
+// Contains is a function for judging wheather e is a val int BST
+func (b *BST) Contains(e interface{}) bool {
+	// return b.SearchByRec(e) != nil
+	return b.SearchByIota(e) != nil
 }
 
 // Size is function for getting size of bst
 func (b *BST) Size() int {
 	return b.size
+}
+
+// GetSize is function for getting size of bst
+func (b *BST) GetSize(node *Node) int {
+	if node == nil {
+		return 0
+	}
+
+	return 1 + b.GetSize(node.right) + b.GetSize(node.left)
 }
 
 // Clear is a function for clear BST elements
@@ -111,12 +192,12 @@ func (b *BST) IsEmpty() bool {
 }
 
 // IsLeaf is a for judging wheather the node is a leaf-node
-func IsLeaf(node *node) bool {
+func IsLeaf(node *Node) bool {
 	return node.left == nil && node.right == nil
 }
 
 // Has2Children is for judging wheather the node has two child-node
-func Has2Children(node *node) bool {
+func Has2Children(node *Node) bool {
 	return node.left != nil && node.right != nil
 }
 
@@ -134,8 +215,8 @@ func (b *BST) PreRecur(V *Visitor) {
 		return
 	}
 
-	var preRecur func(*node, *Visitor)
-	preRecur = func(node *node, V *Visitor) {
+	var preRecur func(*Node, *Visitor)
+	preRecur = func(node *Node, V *Visitor) {
 		// stop recursion
 		if node == nil || V.Stop {
 			return
@@ -155,8 +236,8 @@ func (b *BST) InRecur(V *Visitor) {
 		return
 	}
 
-	var inRecur func(*Visitor, *node)
-	inRecur = func(V *Visitor, node *node) {
+	var inRecur func(*Visitor, *Node)
+	inRecur = func(V *Visitor, node *Node) {
 		// stop recursion
 		if node == nil || V.Stop {
 			return
@@ -180,8 +261,8 @@ func (b *BST) PostRecur(V *Visitor) {
 		return
 	}
 
-	var postRecur func(*Visitor, *node)
-	postRecur = func(V *Visitor, node *node) {
+	var postRecur func(*Visitor, *Node)
+	postRecur = func(V *Visitor, node *Node) {
 		// stop recursion
 		if node == nil || V.Stop {
 			return
@@ -206,7 +287,7 @@ func (b *BST) LevelTravel(V *Visitor) {
 		return
 	}
 
-	queue := []*node{b.root}
+	queue := []*Node{b.root}
 	for len(queue) != 0 {
 		v := queue[0]
 		queue = queue[1:]
@@ -224,10 +305,39 @@ func (b *BST) LevelTravel(V *Visitor) {
 	}
 }
 
+// String is a function for printing Binary-Tree.
+func (b *BST) String() string {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString(fmt.Sprintf("BST:\n size: %d\n", b.size))
+
+	var toString func(*Node, *bytes.Buffer, string)
+	toString = func(root *Node, buffer *bytes.Buffer, prefix string) {
+		if root == nil {
+			return
+		}
+
+		toString(root.left, buffer, prefix+"---")
+		buffer.WriteString(prefix + fmt.Sprintf("%v\n", root.val))
+		// 注意递归时的buffer调用
+		toString(root.right, buffer, prefix+"---")
+	}
+
+	toString(b.root, buffer, "")
+	return buffer.String()
+}
+
+func (b *BST) compare(e1, e2 interface{}) int {
+	if b.comparator == nil {
+		return utils.Comparator(e1, e2)
+	}
+
+	return b.comparator(e1, e2)
+}
+
 // GetHByRecur is a function for get depth of binary tree through Recursion.
 func (b *BST) GetHByRecur() int {
-	var height func(*node) int
-	height = func(node *node) int {
+	var height func(*Node) int
+	height = func(node *Node) int {
 		if node == nil {
 			return 0
 		}
@@ -237,16 +347,16 @@ func (b *BST) GetHByRecur() int {
 	return height(b.root)
 }
 
+/****************** 工具函数 ***********************/
+
 // GetHByIota is a function for get depth of binary tree through Iota
 func (b *BST) GetHByIota() int {
 	if b.root == nil {
 		return 0
 	}
 
-	tmp, height, level := []*node{b.root}, 0, 1
-
+	tmp, height, level := []*Node{b.root}, 0, 1
 	for len(tmp) != 0 {
-		// Queue processing
 		v := tmp[0]
 		tmp = tmp[1:]
 		level--
@@ -254,7 +364,6 @@ func (b *BST) GetHByIota() int {
 		if v.left != nil {
 			tmp = append(tmp, v.left)
 		}
-
 		if v.right != nil {
 			tmp = append(tmp, v.right)
 		}
@@ -264,25 +373,24 @@ func (b *BST) GetHByIota() int {
 			level = len(tmp)
 		}
 	}
-
 	return height
 }
 
 // IsComplete is a function for judging wheather the binary tree is a complete-binary-tree
+/*
+* left != nil enQueue
+* left == nil, right != nil false
+* right != nil enQueue
+* left != nil, right == nil
+* 							 ------> right == nil, 判断是否为叶子节点
+* left == nil, right == nil
+ */
 func (b *BST) IsComplete() bool {
 	if b.root == nil {
 		return false
 	}
 
-	/*
-	* left != nil enQueue
-	* left == nil, right != nil false
-	* right != nil enQueue
-	* left != nil, right == nil
-	* 							 ------> right == nil, 判断是否为叶子节点
-	* left == nil, right == nil
-	 */
-	tmp := []*node{b.root}
+	tmp := []*Node{b.root}
 	for len(tmp) > 0 {
 		v := tmp[0]
 		tmp = tmp[1:]
@@ -306,60 +414,15 @@ func (b *BST) IsComplete() bool {
 	return true
 }
 
-// String is a function for printing Binary-Tree.
-func (b *BST) String() string {
-	buffer := new(bytes.Buffer)
-	buffer.WriteString(fmt.Sprintf("BST:\n size: %d\n", b.size))
-
-	var toString func(*node, *bytes.Buffer, string)
-	toString = func(root *node, buffer *bytes.Buffer, prefix string) {
-		if root == nil {
-			return
-		}
-
-		toString(root.left, buffer, prefix+"---")
-		buffer.WriteString(prefix + fmt.Sprintf("%v\n", root.val))
-		// 注意递归时的buffer调用
-		toString(root.right, buffer, prefix+"---")
-	}
-
-	toString(b.root, buffer, "")
-	return buffer.String()
-}
-
-func (b *BST) compare(e1, e2 interface{}) int {
-	if b.comparator == nil {
-		return utils.Comparator(e1, e2)
-	}
-
-	return b.comparator(e1, e2)
-}
-
 // ReverseBT is a function for reverse the left-node and right-node of parent-node
 func ReverseBT(b *BST) *BST {
-	var reverse func(*node)
-	reverse = func(root *node) {
+	var reverse func(*Node)
+	reverse = func(root *Node) {
 		if root == nil {
 			return
 		}
-		/*
-			preorder:
-			root.left, root.right = root.right, root.left
-			reverse(root.left)
-			reverse(root.right)
 
-			inorder:
-			reverse(root.left)
-			root.left, root.right = root.right, root.left
-			reverse(root.left)
-
-			postorder:
-			reverse(root.left)
-			reverse(root.right)
-			root.left, root.right = root.right, root.left
-		*/
-
-		tmp := []*node{root}
+		tmp := []*Node{root}
 
 		for len(tmp) > 0 {
 			v := tmp[0]
@@ -375,7 +438,26 @@ func ReverseBT(b *BST) *BST {
 		}
 
 	}
-
 	reverse(b.root)
 	return b
+}
+
+// IsValidBST is function for judging if a BT is a BST by recursion.
+func (b *BST) IsValidBST() bool {
+	var pre = math.MinInt64
+	var isValid func(*Node) bool
+	isValid = func(node *Node) bool {
+		if node == nil {
+			return true
+		}
+		if !isValid(node.left) {
+			return false
+		}
+		if b.compare(pre, node.val) >= 0 {
+			return false
+		}
+		return isValid(node.right)
+	}
+
+	return isValid(b.root)
 }
