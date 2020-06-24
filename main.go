@@ -30,7 +30,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(nBst)
+	fmt.Println(nBst.Rank(11))
 	// for _, v := range arr {
 	// 	fmt.Println(nBst.Contains(v))
 	// }

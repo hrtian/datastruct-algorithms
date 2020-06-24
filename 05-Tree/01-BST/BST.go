@@ -110,9 +110,9 @@ func (b *BST) AddByIota(e interface{}) error {
 	}
 	b.size++
 	return nil
-
 }
 
+// Remove is a function for delete element in BST
 func (b *BST) Remove(e interface{}) bool {
 	return false
 }
@@ -347,7 +347,7 @@ func (b *BST) GetHByRecur() int {
 	return height(b.root)
 }
 
-/****************** 工具函数 ***********************/
+/********************************************************** 工具函数 *****************************************************************/
 
 // GetHByIota is a function for get depth of binary tree through Iota
 func (b *BST) GetHByIota() int {
@@ -460,4 +460,159 @@ func (b *BST) IsValidBST() bool {
 	}
 
 	return isValid(b.root)
+}
+
+// MinByRecur is a function for get min val of BST by recursion
+func (b *BST) MinByRecur() interface{} {
+	var min func(*Node) *Node
+	min = func(node *Node) *Node {
+		if node.left == nil {
+			return node
+		}
+
+		return min(node.left)
+	}
+	return min(b.root).val
+}
+
+// MinByIota is a function for get min val of BST by iota
+func (b *BST) MinByIota() interface{} {
+	if b.root == nil {
+		return nil
+	}
+	node := b.root
+	for node.left != nil {
+		node = node.left
+	}
+	return node.val
+}
+
+// MaxByRecur is a function for get max val of BST by recursion
+func (b *BST) MaxByRecur() interface{} {
+	var max func(*Node) *Node
+	max = func(node *Node) *Node {
+		if node.right == nil {
+			return node
+		}
+		return max(node.right)
+	}
+	return max(b.root).val
+}
+
+// MaxByIota is a function for get max val of BST by iota
+func (b *BST) MaxByIota() interface{} {
+	if b.root == nil {
+		return nil
+	}
+	node := b.root
+	for node.right != nil {
+		node = node.right
+	}
+	return node.val
+}
+
+// Floor <=
+func (b *BST) Floor(e interface{}) *Node {
+	var floor func(*Node, interface{}) *Node
+	floor = func(node *Node, e interface{}) *Node {
+		if node == nil {
+			return nil
+		}
+		cmp := b.compare(e, node.val)
+		if cmp == 0 {
+			return node
+		}
+		if cmp > 0 {
+			return floor(node.left, e)
+		}
+
+		ret := floor(node.right, e)
+		if ret != nil {
+			return ret
+		}
+		return node
+	}
+
+	node := floor(b.root, e)
+	if node == nil {
+		return nil
+	}
+	return node
+}
+
+// Ceil >=
+func (b *BST) Ceil(e interface{}) *Node {
+	var ceil func(*Node, interface{}) *Node
+	ceil = func(node *Node, e interface{}) *Node {
+		if node == nil {
+			return nil
+		}
+
+		cmp := b.compare(e, node.val)
+		if cmp == 0 {
+			return node
+		}
+		if cmp > 0 {
+			return ceil(node.right, e)
+		}
+
+		ret := ceil(node.left, e)
+		if ret != nil {
+			return ret
+		}
+		return node
+	}
+
+	node := ceil(b.root, e)
+	if node == nil {
+		return nil
+	}
+	return node
+}
+
+// Select is a function for find node which is more than K nodes
+func (b *BST) Select(k int) interface{} {
+	var selectK func(*Node, int) *Node
+	selectK = func(node *Node, k int) *Node {
+		if node == nil {
+			return nil
+		}
+
+		t := b.GetSize(node.left)
+		fmt.Println(t)
+		if t > k {
+			return selectK(node.left, k)
+		} else if t < k {
+			// k - t - 1 --> k - t 为向右需要的个数， - 1的原因是node.right 是一个大于目标的节点
+			return selectK(node.right, k-t-1)
+		} else {
+			return node
+		}
+
+	}
+
+	node := selectK(b.root, k)
+	if node != nil {
+		return	node.val
+	}
+	return nil
+}
+
+
+func(b *BST)Rank(e interface{}) int {
+	var rank func(*Node, interface{}) int
+	rank = func(node *Node, e interface{}) int {
+		if node == nil {return 0}
+		cmp := b.compare(e, node.val)
+
+		if cmp < 0 {
+			return rank(node.left, e)
+		} else if cmp > 0 {
+			return 1 + b.GetSize(node.left) + rank(node.right, e)
+		} else {
+			return b.GetSize(node.left)
+		}
+	}
+	
+	return rank(b.root, e)
 }
