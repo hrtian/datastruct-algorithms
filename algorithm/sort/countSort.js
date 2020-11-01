@@ -1,27 +1,35 @@
 /**
+ * Count sort implementation. O(n+max)
+ *
+ * 1. 当数字变化范围小的时候效果好；
+ * 2. 仅适用于整数数组；
+ *
  * @param {number[]} originalArray
- * @param {number} [smallestElement]
- * @param {number} [biggestElement]
+ * @param {number} [smallestItem]
+ * @param {number} [biggestItem]
  */
 
 function countSort(
 	originalArray,
-	smallestElement = undefined,
-	biggestElement = undefined
+	smallestItem = undefined,
+	biggestItem = undefined
 ) {
-	let detectedSmallestElement = smallestElement || 0;
-	let detectedBiggestElement = biggestElement || 0;
-	if (smallestElement === undefined || biggestElement === undefined) {
-		detectedSmallestElement = Math.min(...originalArray);
-		detectedBiggestElement = Math.max(...originalArray);
+	let detectedSmallestItem = smallestItem || 0;
+	let detectedBiggestItem = biggestItem || 0;
+	if (smallestItem === undefined || biggestItem === undefined) {
+		detectedSmallestItem = Math.min(...originalArray);
+		detectedBiggestItem = Math.max(...originalArray);
 	}
 
-    // The buckets will ho;d frequency of each number from originalArray;
-	const buckets = Array(detectedBiggestElement - detectedSmallestElement + 1).fill(0);
-	originalArray.forEach((element) => {
-		buckets[element - detectedSmallestElement]++;
+	// The buckets will ho;d frequency of each number from originalArray;
+	const buckets = Array(detectedBiggestItem - detectedSmallestItem + 1).fill(
+		0
+	);
+	originalArray.forEach((item) => {
+		buckets[item - detectedSmallestItem]++;
 	});
 
+	// calculate how many elements which are less than or equals for the given index.
 	for (let bucketIdx = 1; bucketIdx < buckets.length; bucketIdx++) {
 		buckets[bucketIdx] += buckets[bucketIdx - 1];
 	}
@@ -29,18 +37,11 @@ function countSort(
 	buckets.unshift(0);
 
 	const sortedArray = Array(originalArray.length).fill(null);
-	for (
-		let elementIndex = 0;
-		elementIndex < originalArray.length;
-		elementIndex += 1
-	) {
-		const element = originalArray[elementIndex];
-		const elementSortedPosition =
-			buckets[element - detectedSmallestElement];
-		sortedArray[elementSortedPosition] = element;
-		buckets[element - detectedSmallestElement] += 1;
+	for (let itemIdx = 0; itemIdx < originalArray.length; itemIdx++) {
+		const item = originalArray[itemIdx];
+		const itemSortedPosition = buckets[item - detectedSmallestItem];
+		sortedArray[itemSortedPosition] = item;
+		buckets[item - detectedSmallestItem]++;
 	}
 	return sortedArray;
 }
-
-console.log(countSort([1, 5, 1, 2, 4, 9, 51, 48, 23, 84, 0, 6]));

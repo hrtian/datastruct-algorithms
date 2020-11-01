@@ -5,31 +5,32 @@
  */
 
 function quickSort(originalArray) {
-	const array = [...originalArray];
+    const array = [...originalArray];
 
-	if (array.length <= 1) {
-		return array;
-	}
+    if(array.length <= 1) {
+        return array;
+    }
 
-	const lowArray = [];
-	const highArray = [];
+    const lowArray = [];
+    const highArray = [];
 
-	const pivotElement = array.shift();
-	const centerArray = [pivotElement];
+    const pivot = array.shift();
+    const centerArray = [pivot];
 
-	while (array.length) {
-		const currentElement = array.shift();
+    while (array.length) {
+        const currentItem = array.shift();
+  
+        if (currentItem == pivot) {
+          centerArray.push(currentItem);
+        } else if (currentItem < pivot) {
+          lowArray.push(currentItem);
+        } else {
+          highArray.push(currentItem);
+        }
+      }
 
-		if (currentElement == pivotElement) {
-			centerArray.push(currentElement);
-		} else if (currentElement < pivotElement) {
-			lowArray.push(currentElement);
-		} else {
-			highArray.push(currentElement);
-		}
-	}
-
-	const lowArraySorted = quickSort(lowArray);
-	const highArraySorted = quickSort(highArray);
-	return lowArraySorted.concat(centerArray).concat(highArraySorted);
+    const lowArraySorted = quickSort(lowArray);
+    const highArraySorted = quickSort(highArray);
+    return lowArraySorted.concat(centerArray).concat(highArraySorted);
 }
+console.log(quickSort([1, 5, 1, 2, 4, 9, 51, 48, 23, 84, 0, 6]));
