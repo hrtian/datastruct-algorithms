@@ -29,5 +29,3 @@ function shellSort(originalArray) {
     
     return array;
 }
-console.log(shellSort([1, 5, 1, 2, 4, 9, 51, 48, 23, 84, 0, 6]));
-

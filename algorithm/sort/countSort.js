@@ -4,7 +4,7 @@
  * @param {number} [biggestElement]
  */
 
-function count(
+function countSort(
 	originalArray,
 	smallestElement = undefined,
 	biggestElement = undefined
@@ -16,10 +16,8 @@ function count(
 		detectedBiggestElement = Math.max(...originalArray);
 	}
 
-	const buckets = Array(
-		detectedBiggestElement - detectedSmallestElement + 1
-	).fill(0);
-
+    // The buckets will ho;d frequency of each number from originalArray;
+	const buckets = Array(detectedBiggestElement - detectedSmallestElement + 1).fill(0);
 	originalArray.forEach((element) => {
 		buckets[element - detectedSmallestElement]++;
 	});
@@ -44,3 +42,5 @@ function count(
 	}
 	return sortedArray;
 }
+
+console.log(countSort([1, 5, 1, 2, 4, 9, 51, 48, 23, 84, 0, 6]));
